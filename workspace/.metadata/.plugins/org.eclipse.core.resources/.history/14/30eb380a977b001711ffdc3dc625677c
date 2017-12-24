@@ -1,0 +1,61 @@
+import java.io.IOException;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.json.JSONArray;
+import org.apache.commons.json.JSONException;
+import org.apache.commons.json.JSONObject;
+
+
+
+
+public class StandAloneIO {
+	public static void main(String a[]) {
+		String data = "%7B%22widget_id%22%3A%20%7B%22id%22%3A%20%221%22%7D%2C%22content%22%3A%20%7B%22product%22%3A%20%7B%22field%22%3A%20%7B%22value%22%3A%20%5B%22sku%22%2C%20%22title%22%5D%7D%7D%7D%2C%22n_item%22%3A%2016%2C%22context%22%3A%20%7B%22page%22%3A%20%7B%22sku%22%3A%5B%22241920599%22%5D%2C%22uri%22%3A%20%22%2Fiams-proactive-health-kitten-formula-cat-food-57-lb%3Fcm_vc%3D-10005%22%7D%2C%22user%22%3A%20%7B%20%22uuid%22%3A%20%22154004989-ig69x6sd538jxgfebzaa%22%7D%7D%7D";		
+		 HttpClient httpclient = new HttpClient();
+		//	GetMethod httpget = new GetMethod("https://apis-ts.rfksrv.com/11250-154004989/3?data="+data);
+			// Actual Stage
+			// GetMethod httpget = new GetMethod("https://apis-staging.rfksrv.com/search-rec/11250-154004989/3?data="+data);
+			// tsc stage
+		 
+		 long me = System.currentTimeMillis();
+				GetMethod httpget = new GetMethod("https://apis-staging-ts.rfksrv.com/11250-154004989/3?data="+data);
+			 httpget.addRequestHeader("x-api-key", "00-154004989-b3Fkz2HRl2uRRmz0W1H0svrbgYPbKnEfT8S52jAeZ0DNVo9u");
+			//prod
+		 //	GetMethod httpget = new GetMethod("https://apis-ts.rfksrv.com/11250-154004989/3?data="+data);
+		 //	httpget.addRequestHeader("x-api-key", "00-154004989-H+PtB961c0iQWgAq3q+d8NjH21JJR6lRPH0IEROzsm3FV03x");
+			// httpget.addRequestHeader("Pragma", "no-cache");
+		 httpget.addRequestHeader("Cache-Control", "no-cache");
+					JSONObject resultJSON;
+					try {
+						httpclient.executeMethod(httpget);
+						
+						System.out.println(httpget.getResponseBodyAsString());
+						 long you = System.currentTimeMillis();
+						 
+						 System.out.println((me-you) + );
+						resultJSON = new JSONObject(httpget.getResponseBodyAsString());
+						StringBuilder sb = new StringBuilder();
+						sb.append(resultJSON.get("widget_title"));
+						JSONArray jsr = resultJSON.getJSONObject("content").getJSONObject("product").getJSONArray("value");
+						sb.append("|");
+						for (int i = 0; i < jsr.length(); i++) {
+							sb.append(((JSONObject)jsr.get(i)).getString("sku")).append(",");
+						}
+						String op  = sb.toString().substring(0, sb.length()-1);
+						System.out.println(op);
+					}
+					catch (HttpException e1) {
+						e1.printStackTrace();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+				catch (JSONException e) {
+					e.printStackTrace();
+				}
+				finally {
+				    httpget.releaseConnection();
+				  }
+	}
+}

@@ -1,0 +1,68 @@
+import java.io.IOException;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.json.JSONArray;
+import org.apache.commons.json.JSONException;
+import org.apache.commons.json.JSONObject;
+
+public class StandAloneIO {
+	public static void main(String a[]) {
+		String data = "%7B%22n_item%22%3A20%2C%22facet%22%3A%7B%22all%22%3Atrue%2C%22max%22%3A-1%7D%2C%22query%22%3A%7B%22keyphrase%22%3A%5B%22jeans%22%5D%7D%2C%22content%22%3A%7B%22product%22%3A%7B%7D%7D%2C%22page_number%22%3A1%7D";		
+		 HttpClient httpclient = new HttpClient();
+		 JSONObject facetView;
+		  
+				GetMethod httpget = new GetMethod("https://apis-staging-ts.rfksrv.com/11250-154004989/3?data="+data);
+			 httpget.addRequestHeader("x-api-key", "00-154004989-b3Fkz2HRl2uRRmz0W1H0svrbgYPbKnEfT8S52jAeZ0DNVo9u");
+		 
+		 httpget.addRequestHeader("Cache-Control", "no-cache");
+					JSONObject resultJSON;
+					try {
+						httpclient.executeMethod(httpget);
+						resultJSON = new JSONObject(httpget.getResponseBodyAsString());
+					long stat = System.currentTimeMillis();
+						System.out.println(resultJSON.get("facet").toString());
+						JSONObject facetObj = (JSONObject) resultJSON.get("facet");
+						JSONArray opArray;
+					    JSONObject opObj;
+					    JSONObject parentObj;
+					    JSONArray parentArray  = new JSONArray();
+					    JSONObject keyvalue;
+						for (Object key : facetObj.keySet()) {
+					        String keyStr = (String)key;
+					        parentObj  = new JSONObject();
+					        parentObj.put("value", keyStr);
+					        keyvalue = (JSONObject)facetObj.get(keyStr);
+					        JSONArray Jarray = keyvalue.getJSONArray("value");
+					        opObj  = new JSONObject();
+					        opArray = new JSONArray();
+					        for (int i = 0 ; i < Jarray.length() ; i++) {
+					        	JSONObject arObj = (JSONObject) Jarray.get(i);
+					        	opObj.put("extendedData" , new JSONObject().put("uniqueId", arObj.get("id")));
+					        	opObj.put("label", arObj.get("text"));
+					        	opObj.put("count", arObj.get("count"));
+					        	opObj.put("count", arObj.get("text"));
+					        	opArray.put(opObj);
+					        }
+					        parentObj.put("entry" , opArray);
+					        parentArray.add(parentObj);
+						}
+						long end = System.currentTimeMillis();
+						System.out.println("facet processing time" + (end - stat) + "ms" );
+						
+						System.out.println(parentArray);
+					}
+					catch (HttpException e1) {
+						e1.printStackTrace();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+				catch (JSONException e) {
+					e.printStackTrace();
+				}
+				finally {
+				    httpget.releaseConnection();
+				  }
+	}
+}

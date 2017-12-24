@@ -1,0 +1,80 @@
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.HttpClientBuilder;
+
+public class Test2 {
+
+	
+	private static HttpClient getHttpClient() {
+
+	    try {
+	        SSLContext sslContext = SSLContext.getInstance("TLSv1.0");
+
+	        sslContext.init(null,
+	                new TrustManager[]{new X509TrustManager() {
+	                    public X509Certificate[] getAcceptedIssuers() {
+
+	                        return null;
+	                    }
+
+	                    public void checkClientTrusted(
+	                            X509Certificate[] certs, String authType) {
+
+	                    }
+
+	                    public void checkServerTrusted(
+	                            X509Certificate[] certs, String authType) {
+
+	                    }
+	                }}, new SecureRandom());
+
+	        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext,SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+
+
+	        HttpClient httpClient = HttpClientBuilder.create().setSSLSocketFactory(socketFactory).build();
+	        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+	            @Override
+	            public boolean verify(String arg0, SSLSession arg1) {
+	                return true;
+	            }
+	        });
+	        return httpClient;
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return HttpClientBuilder.create().build();
+	    }
+	}
+	public static void main(String a[]) {
+	
+		 HttpClient httpClient = getHttpClient();
+ 	     HttpGet request = new HttpGet("https://apis.rfksrv.com/search-rec/154004989/3?data=1");
+ 		 request.addHeader("x-api-key", "00-154004989-b3Fkz2HRl2uRRmz0W1H0svrbgYPbKnEfT8S52jAeZ0DNVo9u");
+ 		 request.addHeader("Cache-Control","no-cache");
+ 		try {
+ 			HttpResponse response = httpClient.execute(request);
+ 		} catch (ClientProtocolException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		} catch (IOException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+	}
+	
+}

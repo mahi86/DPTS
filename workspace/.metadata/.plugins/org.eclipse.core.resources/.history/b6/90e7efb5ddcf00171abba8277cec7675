@@ -1,0 +1,8 @@
+package com.in28minutes.spring.aop.springaop;
+
+import javax.xml.ws.ServiceMode;
+
+@Service
+public class Business1 {
+
+}

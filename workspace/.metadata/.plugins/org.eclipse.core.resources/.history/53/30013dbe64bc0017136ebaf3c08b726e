@@ -1,0 +1,27 @@
+package com.in28mins.spring.basics.springin5steps;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+import com.in28mins.spring.basics.springin5steps.basic.BinarySearchImpl;
+import com.in28mins.spring.basics.springin5steps.cdi.SomeBusinessDAO;
+import com.in28mins.spring.basics.springin5steps.scope.MyDAO;
+
+@SpringBootApplication
+public class SpringIn5StepsApplicationScopeCdiApplication {
+private static Logger LOGGER = LoggerFactory.getLogger(SpringIn5StepsApplicationScopeCdiApplication.class);
+	public static void main(String[] args) {
+	 
+		ApplicationContext ac = SpringApplication.run(SpringIn5StepsApplicationScopeCdiApplication.class, args);
+		SomeBusinessDAO b = ac.getBean(SomeBusinessDAO.class );
+		 
+		
+		
+	 
+		System.out.println(result);
+	}
+}

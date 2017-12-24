@@ -1,0 +1,78 @@
+import java.io.IOException;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+
+public class TSCEntryFilter {
+	
+	
+	public static HttpClient wrapClient(HttpClient base) {
+        try {
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            X509TrustManager tm = new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType)
+                        throws java.security.cert.CertificateException {
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType)
+                        throws java.security.cert.CertificateException {
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+            };
+            ctx.init(null, new TrustManager[] { tm }, null);
+            SSLSocketFactory ssf = new SSLSocketFactory(ctx);
+            ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            ClientConnectionManager ccm = base.getConnectionManager();
+            SchemeRegistry sr = ccm.getSchemeRegistry();
+            sr.register(new Scheme("https", ssf, 443));
+            return new DefaultHttpClient(ccm, base.getParams());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+	}
+	public static void main(String arg[]) {
+	
+	/*HttpClient httpclient = new DefaultHttpClient();
+	httpclient = wrapClient(httpclient);
+	 	HttpGet request = new HttpGet("https://apis.rfksrv.com/search-rec/154004989/3?data=1");
+		 request.addHeader("x-api-key", "00-154004989-b3Fkz2HRl2uRRmz0W1H0svrbgYPbKnEfT8S52jAeZ0DNVo9u");
+		 request.addHeader("Cache-Control","no-cache");
+		 try {
+			HttpResponse response = httpclient.execute(request);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  */
+		
+		String me = "aei|ou";
+		System.out.println(me.split("\\|")[0]);
+		 
+	}
+}

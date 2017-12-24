@@ -1,0 +1,74 @@
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import org.apache.commons.json.JSONArray;
+import org.apache.commons.json.JSONObject;
+
+class MyFacets {
+
+	
+	
+public static void main(String[] args) {
+   HashMap  hm = new HashMap ();
+   hm.put("0","label");
+   hm.put("1",buildFacetItems());
+   hm.put("2",String.valueOf(buildFacetType("id")));
+   hm.put("3","moreoptions");
+   hm.put("4","four");
+   Map  treeMap = sortedMap(hm);
+   printMap(treeMap);
+}//main
+
+
+public static Map sortedMap(Map hm) {
+	return  new TreeMap(hm);
+}
+
+
+
+public static boolean  buildFacetType(String identifier) {
+	if(identifier.indexOf("PRICE") > -1) {
+		return true;
+	}
+	return  false;
+}
+
+
+public static void printMap(Map<String,String> map) {
+    Set s = map.entrySet();
+    Iterator it = s.iterator();
+    while ( it.hasNext() ) {
+       Map.Entry entry = (Map.Entry) it.next();
+       String key = (String) entry.getKey();
+       System.out.println(key + " => " + entry.getValue());
+    }//while
+    System.out.println("========================");
+}//printMap
+
+public static JSONArray buildFacetItems () {
+	JSONArray array = new JSONArray();
+	try{
+	JSONObject item = new JSONObject();
+	item.put("0", "FacetValue");
+	item.put("1", "count");
+	item.put("2", "ads:'facetvalue'");
+	item.put("3", "facetValue");
+	array.put(item);
+	} catch(Exception e) {
+		
+		System.out.println("error!!");
+	}
+	
+	return array;
+	 
+	
+}
+
+
+}//class
+
+
+

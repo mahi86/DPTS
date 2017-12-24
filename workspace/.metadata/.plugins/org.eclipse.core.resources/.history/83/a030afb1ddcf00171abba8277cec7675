@@ -1,0 +1,5 @@
+package com.in28minutes.spring.aop.springaop;
+
+public class Business1 {
+
+}

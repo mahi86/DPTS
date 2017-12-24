@@ -1,0 +1,19 @@
+package com.in28mins.spring.basics.springin5steps;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+@SpringBootApplication
+public class SpringIn5StepsApplication {
+
+	public static void main(String[] args) {
+	//	BinarySearchImpl b = new BinarySearchImpl(new BubbleSortAlgorithm());
+		// default and a
+		ApplicationContext ac = SpringApplication.run(SpringIn5StepsApplication.class, args);
+		BinarySearchImpl b = ac.getBean(BinarySearchImpl.class);
+		int result = b.binarySearch(new int[] {2,4,6,8} , 3);
+		System.out.println(result);
+	//	SpringApplication.run(SpringIn5StepsApplication.class, args);
+	}
+}

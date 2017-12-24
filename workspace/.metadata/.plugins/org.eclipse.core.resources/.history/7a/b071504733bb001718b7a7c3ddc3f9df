@@ -1,0 +1,31 @@
+package com.in28mins.spring.basics.springin5steps;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class BinarySearchImpl {
+//Sort the array
+//Search the array
+//return results.
+	/*
+	 * Bean Injection
+	 * 
+	 **/ public BinarySearchImpl(SortAlgorithm sa) {
+		super();
+		this.sa = sa;
+	}
+	
+	
+	@Autowired
+	private SortAlgorithm sa ;
+	
+	// setter injection
+	public void setSa(SortAlgorithm sa) {
+		this.sa = sa;
+	}
+	public int binarySearch(int [] number , int numberToSearch) {
+		int [] bsresult = sa.sort(number);
+		return 3;
+	}
+}

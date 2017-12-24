@@ -1,0 +1,77 @@
+import java.io.IOException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+
+public class Test3 {
+	
+
+
+public static HttpClient verifiedClient(HttpClient base) {  
+	
+	 
+	
+	
+	
+	
+	
+	
+    try {  
+        SSLContext ctx = SSLContext.getInstance("SSL");  
+        X509TrustManager tm = new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {  
+                return null;  
+            }  
+            @Override  
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}  
+            @Override  
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}  
+        };
+
+        ctx.init(null, new TrustManager[] { tm }, null); 
+        SSLSocketFactory ssf = new SSLSocketFactory(ctx, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
+        ClientConnectionManager mgr = base.getConnectionManager();
+        SchemeRegistry registry = mgr.getSchemeRegistry(); 
+        registry.register(new Scheme("https", 443, ssf)); 
+        return new DefaultHttpClient(mgr, base.getParams());  
+    } catch (Exception ex) {  
+        ex.printStackTrace();  
+        return null;  
+    }  
+}  
+
+
+
+	public static void main(String ar[] ) {
+		HttpClient httpclient = new DefaultHttpClient();
+		httpclient = verifiedClient(httpclient);
+		 HttpGet request = new HttpGet("https://apis.rfksrv.com/search-rec/154004989/3?data=1");
+ 		 request.addHeader("x-api-key", "00-154004989-b3Fkz2HRl2uRRmz0W1H0svrbgYPbKnEfT8S52jAeZ0DNVo9u");
+ 		 request.addHeader("Cache-Control","no-cache");
+ 		try {
+ 			HttpResponse response = httpclient.execute(request);
+ 		} catch (ClientProtocolException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		} catch (IOException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+	}
+		
+	
+}

@@ -1,0 +1,10 @@
+package com.in28minutes.spring.aop.springaop.aspect;
+
+import org.slf4j.Logger;
+
+public class BeforeAspect {
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
+	public void before  () {
+		logger.info("Intercepted method call");
+	}
+}

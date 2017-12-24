@@ -1,0 +1,42 @@
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.json.JSONArray;
+import org.apache.commons.json.JSONException;
+import org.apache.commons.json.JSONObject;
+
+public class StandAloneIO {
+	public static void main(String a[])  throws Exception{
+		String data = "%7B%22context%22%3A%7B%22store%22%3A%7B%22id%22%3A%2212%22%7D%2C%22user%22%3A%7B%22uuid%22%3A%22154004989-u1-2z-4x-1m-rhvzba83k31wusl4gb6s-1508501732704%22%7D%7D%2C%22facet%22%3A%7B%22total%22%3Atrue%2C%22parentcatgroupidsearch%22%3A%7B%22max%22%3A-1%7D%2C%22all%22%3Atrue%2C%22max%22%3A20%2C%22_bazaarvoicereviewrating%22%3A%7B%22sort%22%3A%7B%22type%22%3A%22text%22%2C%22order%22%3A%22desc%22%7D%7D%7D%2C%22n_item%22%3A20%2C%22page_number%22%3A1%2C%22content%22%3A%7B%22product%22%3A%7B%22field%22%3A%7B%22value%22%3A%5B%22catentryid%22%2C%22sku%22%5D%7D%7D%7D%2C%22sort%22%3A%7B%22type%22%3A%22featured%22%7D%2C%22query%22%3A%7B%22keyphrase%22%3A%5B%22%5C%5C%2410+off+voucher%22%5D%7D%2C%22suggestion%22%3A%7B%22keyphrase%22%3A%7B%22max%22%3A5%7D%7D%7D";		
+		HttpClient httpclient = new HttpClient();
+		GetMethod httpget = new GetMethod("https://apis-ts.rfksrv.com/11250-154004989/3?data="+data);
+		httpget.addRequestHeader("x-api-key", "00-154004989-H+PtB961c0iQWgAq3q+d8NjH21JJR6lRPH0IEROzsm3FV03x");
+	    httpget.addRequestHeader("Cache-Control", "no-cache");
+					JSONObject resultJSON;
+					try {
+						httpclient.executeMethod(httpget);
+						resultJSON = new JSONObject(httpget.getResponseBodyAsString());
+						StringBuffer sb = new StringBuffer();
+						JSONArray jry  =((JSONObject)( (JSONObject) resultJSON.get("content")).get("product")).getJSONArray("value");
+						for(int i = 0 ; i < jry.size() ; i++) {
+							sb.append(((JSONObject)jry.get(i)).get("sku")+",");
+						}
+					}
+					catch (HttpException e1) {
+						e1.printStackTrace();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+				catch (JSONException e) {
+					e.printStackTrace();
+				}
+				finally {
+				    httpget.releaseConnection();
+				  }
+	}
+}

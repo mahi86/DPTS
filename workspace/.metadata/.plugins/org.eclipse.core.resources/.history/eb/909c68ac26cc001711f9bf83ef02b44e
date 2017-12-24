@@ -1,0 +1,5 @@
+package com.example.websocketdemo.config;
+
+public class WebSocketConfig {
+
+}
